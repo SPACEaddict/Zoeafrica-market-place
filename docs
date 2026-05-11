@@ -1,0 +1,507 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout – ZoeAfrica Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#e63329;--green:#1a7a3c;--gold:#f5a623;
+  --dark:#111827;--mid:#374151;--muted:#6b7280;
+  --light:#f9fafb;--border:#e5e7eb;--white:#ffffff;
+  --radius:10px;--shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+body{font-family:'DM Sans',sans-serif;background:#f4f5f6;color:var(--dark);font-size:14px}
+a{text-decoration:none;color:inherit}img{display:block;max-width:100%}ul{list-style:none}
+
+/* Header */
+header{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.header-inner{max-width:1280px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:pointer}
+.logo-mark span{font-family:'Playfair Display',serif;font-weight:900;font-size:28px;line-height:1}
+.logo-sub{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;display:block;margin-top:-4px}
+.header-spacer{flex:1}
+.header-actions{display:flex;align-items:center;gap:16px;flex-shrink:0}
+.header-actions a{color:var(--mid);font-size:13px;font-weight:600}
+.header-actions a:hover{color:var(--dark)}
+
+/* Main */
+.main{max-width:1280px;margin:0 auto;padding:24px 20px}
+
+/* Breadcrumb */
+.breadcrumb{font-size:12px;color:var(--muted);margin-bottom:20px}
+.breadcrumb a{color:var(--red);cursor:pointer}
+.breadcrumb a:hover{text-decoration:underline}
+
+/* Section */
+.section-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.section-title-icon{font-size:28px}
+
+/* Two-column layout */
+.checkout-grid{display:grid;grid-template-columns:1fr 360px;gap:24px}
+
+/* Cart section */
+.cart-section{background:var(--white);border-radius:var(--radius);padding:24px;border:1px solid var(--border)}
+
+.cart-item{display:grid;grid-template-columns:80px 1fr 80px;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.cart-item:last-child{border:none;padding-bottom:0}
+.cart-item-img{width:80px;height:80px;border-radius:8px;overflow:hidden;background:var(--light)}
+.cart-item-img img{width:100%;height:100%;object-fit:cover}
+.cart-item-details{display:flex;flex-direction:column;justify-content:space-between}
+.cart-item-title{font-weight:600;font-size:14px;margin-bottom:4px}
+.cart-item-meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+.cart-item-price{font-size:16px;font-weight:700;color:var(--dark)}
+.cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:4px}
+.qty-btn{width:24px;height:24px;border:1px solid var(--border);background:var(--light);border-radius:4px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
+.qty-btn:hover{background:var(--border)}
+.qty-val{font-size:13px;font-weight:600;min-width:20px;text-align:center}
+.cart-item-remove{text-align:right}
+.remove-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:13px;text-decoration:underline}
+.remove-btn:hover{color:#c4271e}
+
+.empty-cart{text-align:center;padding:40px 24px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+
+/* Address & Payment */
+.form-section{background:var(--white);border-radius:var(--radius);padding:24px;border:1px solid var(--border);margin-top:24px}
+.form-section h3{font-size:16px;font-weight:700;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--mid);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .15s}
+.form-group input:focus,.form-group select:focus{border-color:var(--green)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.payment-methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px}
+.payment-option{border:2px solid var(--border);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all .15s}
+.payment-option.active{border-color:var(--green);background:#f0fdf4}
+.payment-option-icon{font-size:24px;margin-bottom:4px}
+.payment-option-name{font-size:12px;font-weight:600;color:var(--dark)}
+
+/* Order summary */
+.order-summary{background:var(--white);border-radius:var(--radius);padding:20px;border:1px solid var(--border);position:sticky;top:80px}
+.summary-title{font-size:14px;font-weight:700;margin-bottom:16px}
+.summary-line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)}
+.summary-line.total{border:none;padding-top:12px;font-size:16px;font-weight:700;color:var(--dark)}
+.summary-line.subtotal-val,.summary-line.shipping-val,.summary-line.total-val{color:var(--dark)}
+
+.promo-input{display:flex;gap:8px;margin-top:16px}
+.promo-input input{flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;outline:none}
+.promo-input input:focus{border-color:var(--green)}
+.promo-input button{padding:10px 16px;background:var(--light);border:1.5px solid var(--border);border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;transition:all .15s}
+.promo-input button:hover{background:var(--border)}
+
+.checkout-btn{width:100%;padding:12px 20px;background:var(--green);color:white;border:none;border-radius:6px;font-weight:700;font-size:14px;cursor:pointer;margin-top:16px;transition:background .2s}
+.checkout-btn:hover{background:#156832}
+.checkout-btn:disabled{background:var(--muted);cursor:not-allowed}
+
+.continue-shopping{width:100%;padding:12px 20px;background:var(--light);color:var(--dark);border:1.5px solid var(--border);border-radius:6px;font-weight:600;font-size:14px;cursor:pointer;margin-top:8px;transition:all .15s;text-align:center}
+.continue-shopping:hover{background:var(--border)}
+
+/* Toast */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--dark);color:white;padding:12px 18px;border-radius:8px;font-size:13px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:slideIn .3s ease}
+.toast.success{border-left:4px solid var(--green)}
+.toast.error{border-left:4px solid var(--red)}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:white;border-radius:12px;padding:32px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:20px}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);position:absolute;top:20px;right:20px}
+.modal-content{text-align:center}
+.modal-icon{font-size:64px;margin-bottom:16px}
+.modal-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:12px}
+.modal-text{color:var(--muted);margin-bottom:24px;font-size:14px}
+.modal-order-id{background:var(--light);padding:12px;border-radius:8px;margin:16px 0;font-family:monospace;font-weight:600;color:var(--dark)}
+.modal-btn{width:100%;padding:12px 20px;background:var(--green);color:white;border:none;border-radius:6px;font-weight:700;font-size:14px;cursor:pointer;margin-top:12px}
+.modal-btn:hover{background:#156832}
+
+/* Responsive */
+@media(max-width:768px){
+  .checkout-grid{grid-template-columns:1fr}
+  .order-summary{position:static}
+  .payment-methods{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Order Success Modal -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="modal-content">
+      <div class="modal-icon">✅</div>
+      <h3 class="modal-title">Order Confirmed!</h3>
+      <p class="modal-text">Thank you for shopping on ZoeAfrica. Your order has been placed successfully.</p>
+      <div class="modal-order-id" id="orderIdDisplay">Order #12345</div>
+      <p class="modal-text" style="font-size:12px;margin-bottom:20px;">You'll receive a confirmation email with tracking details shortly.</p>
+      <button class="modal-btn" onclick="goHome()">Back to Marketplace</button>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <div>
+        <div class="logo-mark">
+          <span style="color:var(--red)">Z</span><span style="color:var(--green)">o</span><span style="color:var(--gold)">e</span><span style="color:var(--red)">A</span><span style="color:var(--green)">f</span><span style="color:var(--gold)">r</span><span style="color:var(--red)">i</span><span style="color:var(--green)">c</span><span style="color:var(--mid)">a</span>
+        </div>
+        <span class="logo-sub">Africa's Marketplace</span>
+      </div>
+    </a>
+    <div class="header-spacer"></div>
+    <div class="header-actions">
+      <a href="index.html">← Continue Shopping</a>
+      <span id="userGreeting" style="color:var(--mid);font-size:13px;"></span>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> / Checkout
+  </div>
+
+  <div class="section-title">
+    <span class="section-title-icon">🛒</span>
+    Your Cart
+  </div>
+
+  <div class="checkout-grid">
+    <!-- Cart Items -->
+    <div>
+      <div class="cart-section" id="cartContainer">
+        <div class="empty-cart">
+          <div class="empty-icon">📦</div>
+          <p>Your cart is empty</p>
+          <a href="index.html" style="color:var(--red);font-weight:600;text-decoration:underline;cursor:pointer;">Continue shopping →</a>
+        </div>
+      </div>
+
+      <!-- Shipping Address -->
+      <div class="form-section">
+        <h3>📍 Shipping Address</h3>
+        <form id="shippingForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name *</label>
+              <input type="text" id="firstName" required>
+            </div>
+            <div class="form-group">
+              <label>Last Name *</label>
+              <input type="text" id="lastName" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="shippingEmail" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" id="phone" required>
+          </div>
+          <div class="form-group">
+            <label>Street Address *</label>
+            <input type="text" id="street" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" id="city" required>
+            </div>
+            <div class="form-group">
+              <label>Country *</label>
+              <select id="country" required>
+                <option value="">Select Country</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Ghana">Ghana</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Egypt">Egypt</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Postal Code (optional)</label>
+            <input type="text" id="postal">
+          </div>
+        </form>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="form-section">
+        <h3>💳 Payment Method</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Select your preferred payment method</p>
+        <div class="payment-methods">
+          <div class="payment-option active" data-method="mpesa" onclick="selectPayment('mpesa')">
+            <div class="payment-option-icon">📱</div>
+            <div class="payment-option-name">M-Pesa</div>
+          </div>
+          <div class="payment-option" data-method="card" onclick="selectPayment('card')">
+            <div class="payment-option-icon">💳</div>
+            <div class="payment-option-name">Card</div>
+          </div>
+          <div class="payment-option" data-method="paypal" onclick="selectPayment('paypal')">
+            <div class="payment-option-icon">🌐</div>
+            <div class="payment-option-name">PayPal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div>
+      <div class="order-summary">
+        <div class="summary-title">Order Summary</div>
+        <div id="summaryItems"></div>
+        <div class="summary-line">
+          <span>Subtotal:</span>
+          <span class="summary-line subtotal-val" id="subtotal">KES 0</span>
+        </div>
+        <div class="summary-line">
+          <span>Shipping:</span>
+          <span class="summary-line shipping-val" id="shipping">FREE</span>
+        </div>
+        <div class="summary-line">
+          <span>Tax (0%):</span>
+          <span class="summary-line shipping-val" id="tax">KES 0</span>
+        </div>
+        <div class="summary-line total">
+          <span>Total:</span>
+          <span class="summary-line total-val" id="total">KES 0</span>
+        </div>
+
+        <div class="promo-input">
+          <input type="text" id="promoCode" placeholder="Promo code (optional)">
+          <button type="button" onclick="applyPromo()">Apply</button>
+        </div>
+
+        <button class="checkout-btn" id="checkoutBtn" onclick="submitOrder()">Place Order</button>
+        <a href="index.html" class="continue-shopping">← Back to Shopping</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const STORAGE_USER = 'za_user';
+const STORAGE_CART = 'za_cart';
+const STORAGE_ORDERS = 'za_orders';
+
+let currentUser = JSON.parse(localStorage.getItem(STORAGE_USER) || 'null');
+let cart = JSON.parse(localStorage.getItem(STORAGE_CART) || '[]');
+let selectedPayment = 'mpesa';
+
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> ${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+function redirectToAuth() {
+  window.location.href = 'index.html';
+}
+
+function renderCart() {
+  const container = document.getElementById('cartContainer');
+  const summaryItems = document.getElementById('summaryItems');
+
+  if (!cart.length) {
+    container.innerHTML = `
+      <div class="empty-cart">
+        <div class="empty-icon">📦</div>
+        <p>Your cart is empty</p>
+        <a href="index.html" style="color:var(--red);font-weight:600;text-decoration:underline;cursor:pointer;">Continue shopping →</a>
+      </div>`;
+    summaryItems.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);">No items in cart</div>';
+    document.getElementById('checkoutBtn').disabled = true;
+    updateSummary();
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="cart-section">
+      ${cart.map((item, i) => `
+        <div class="cart-item">
+          <div class="cart-item-img">
+            <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.title}">
+          </div>
+          <div class="cart-item-details">
+            <div>
+              <div class="cart-item-title">${item.title}</div>
+              <div class="cart-item-meta">Order ID: ${item._id}</div>
+              <div class="cart-item-price">KES ${item.price.toLocaleString()}</div>
+            </div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="updateQty(${i}, -1)">−</button>
+              <span class="qty-val">${item.qty || 1}</span>
+              <button class="qty-btn" onclick="updateQty(${i}, 1)">+</button>
+            </div>
+          </div>
+          <div class="cart-item-remove">
+            <button class="remove-btn" onclick="removeFromCart(${i})">Remove</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  summaryItems.innerHTML = cart.map(item => `
+    <div class="summary-line">
+      <span>${item.title.slice(0, 16)}${item.title.length > 16 ? '...' : ''} x ${item.qty || 1}</span>
+      <span>KES ${(item.price * (item.qty || 1)).toLocaleString()}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('checkoutBtn').disabled = false;
+  updateSummary();
+}
+
+function updateQty(index, change) {
+  const item = cart[index];
+  const newQty = (item.qty || 1) + change;
+  if (newQty < 1) {
+    removeFromCart(index);
+    return;
+  }
+  item.qty = newQty;
+  localStorage.setItem(STORAGE_CART, JSON.stringify(cart));
+  renderCart();
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  localStorage.setItem(STORAGE_CART, JSON.stringify(cart));
+  renderCart();
+  toast('Item removed from cart');
+}
+
+function updateSummary() {
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);
+  const shipping = 0;
+  const tax = 0;
+  const total = subtotal + shipping + tax;
+
+  document.getElementById('subtotal').textContent = `KES ${subtotal.toLocaleString()}`;
+  document.getElementById('shipping').textContent = shipping > 0 ? `KES ${shipping.toLocaleString()}` : 'FREE';
+  document.getElementById('tax').textContent = tax > 0 ? `KES ${tax.toLocaleString()}` : 'KES 0';
+  document.getElementById('total').textContent = `KES ${total.toLocaleString()}`;
+}
+
+function selectPayment(method) {
+  selectedPayment = method;
+  document.querySelectorAll('.payment-option').forEach(el => {
+    el.classList.remove('active');
+  });
+  document.querySelector(`[data-method="${method}"]`).classList.add('active');
+}
+
+function applyPromo() {
+  const code = document.getElementById('promoCode').value.trim().toUpperCase();
+  if (!code) return toast('Please enter a promo code', 'error');
+  if (code === 'AFRICA10') {
+    toast('Promo code applied! 10% discount');
+  } else {
+    toast('Invalid promo code', 'error');
+  }
+}
+
+function validateForm() {
+  const fields = ['firstName', 'lastName', 'shippingEmail', 'phone', 'street', 'city', 'country'];
+  for (const field of fields) {
+    const el = document.getElementById(field);
+    if (!el.value.trim()) {
+      toast(`Please complete all required fields (${field})`, 'error');
+      el.focus();
+      return false;
+    }
+  }
+  return true;
+}
+
+function submitOrder() {
+  if (!validateForm()) return;
+  if (!cart.length) {
+    toast('Your cart is empty', 'error');
+    return;
+  }
+
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const shippingEmail = document.getElementById('shippingEmail').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const street = document.getElementById('street').value.trim();
+  const city = document.getElementById('city').value.trim();
+  const country = document.getElementById('country').value.trim();
+  const postal = document.getElementById('postal').value.trim();
+
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);
+  const orderId = 'ORD-' + Date.now();
+
+  const order = {
+    id: orderId,
+    buyer: { name: `${firstName} ${lastName}`, email: shippingEmail, phone },
+    shipping: { street, city, postal, country },
+    items: cart,
+    subtotal,
+    shipping: 0,
+    tax: 0,
+    total: subtotal,
+    paymentMethod: selectedPayment,
+    createdAt: new Date().toISOString(),
+    status: 'confirmed'
+  };
+
+  let orders = JSON.parse(localStorage.getItem(STORAGE_ORDERS) || '[]');
+  orders.push(order);
+  localStorage.setItem(STORAGE_ORDERS, JSON.stringify(orders));
+
+  // Clear cart
+  cart = [];
+  localStorage.setItem(STORAGE_CART, JSON.stringify(cart));
+
+  // Show success
+  document.getElementById('orderIdDisplay').textContent = `Order #${orderId}`;
+  document.getElementById('successModal').classList.add('open');
+}
+
+function goHome() {
+  window.location.href = 'index.html';
+}
+
+function init() {
+  if (!currentUser) {
+    toast('Please sign in to checkout', 'error');
+    setTimeout(() => redirectToAuth(), 1500);
+    return;
+  }
+
+  document.getElementById('userGreeting').textContent = `👤 ${currentUser.name}`;
+  document.getElementById('firstName').value = currentUser.name.split(' ')[0];
+  document.getElementById('lastName').value = currentUser.name.split(' ').slice(1).join(' ') || '';
+  document.getElementById('shippingEmail').value = currentUser.email;
+
+  renderCart();
+}
+
+init();
+</script>
+</body>
+</html>
